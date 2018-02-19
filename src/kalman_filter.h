@@ -51,19 +51,25 @@ public:
    * @param delta_T Time between k and k+1 in s
    */
   void Predict();
+  
+  /**
+   * Updates the state for Lidar measurements.
+   * @param z The measurement at k+1
+   */
+  void UpdateWithLidar(const Eigen::VectorXd &z);
 
+  /**
+   * Updates the state for radar measurements.
+   * @param z The measurement at k+1
+   */
+  void UpdateWithRadar(const Eigen::VectorXd &z);
+  
+private:
   /**
    * Updates the state by using standard Kalman Filter equations
    * @param z The measurement at k+1
    */
-  void Update(const Eigen::VectorXd &z);
-
-  /**
-   * Updates the state by using Extended Kalman Filter equations
-   * @param z The measurement at k+1
-   */
-  void UpdateEKF(const Eigen::VectorXd &z);
-
+  void update_(const Eigen::VectorXd &z, const Eigen::VectorXd &z_pred);
 };
 
 #endif /* KALMAN_FILTER_H_ */

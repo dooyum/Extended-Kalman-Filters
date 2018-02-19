@@ -34,6 +34,9 @@ public:
 private:
   // check whether the tracking toolbox was initialized or not (first measurement)
   bool is_initialized_;
+  
+  float noise_ax_;
+  float noise_ay_;
 
   // previous timestamp
   long long previous_timestamp_;
