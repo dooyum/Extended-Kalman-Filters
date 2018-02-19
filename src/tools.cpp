@@ -45,6 +45,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 
 MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
     MatrixXd Hj(3,4);
+    Hj.fill(0.0);
     //recover state parameters
     float px = x_state(0);
     float py = x_state(1);
@@ -72,6 +73,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 
 VectorXd Tools::CartesianToPolar(const VectorXd &x) {
   VectorXd polar(3);
+  polar.fill(0.0);
   float px = x(0);
   float py = x(1);
   float px_2 = px * px;
@@ -104,5 +106,21 @@ VectorXd Tools::PolarToCartesian(const VectorXd &x) {
   cartesian << px, py, 0, 0;
   
   return cartesian;
+}
+
+VectorXd Tools::NormalizeRadians(const VectorXd &x) {
+  float phi = x(1);
+  
+  while (phi > M_PI) {
+    phi -= 2 * M_PI;
+  }
+  
+  while (phi < -M_PI) {
+    phi += 2 * M_PI;
+  }
+
+  VectorXd normalizedPolar(3);
+  normalizedPolar << x(0), phi, x(2);
+  return normalizedPolar;
 }
 

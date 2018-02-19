@@ -29,17 +29,18 @@ void KalmanFilter::Predict() {
 
 void KalmanFilter::UpdateWithLidar(const VectorXd &z) {
   VectorXd z_pred = H_ * x_;
-  update_(z, z_pred);
+  VectorXd y = z - z_pred;
+  update_(y);
 }
 
 void KalmanFilter::UpdateWithRadar(const VectorXd &z) {
   Tools tools;
   VectorXd z_pred = tools.CartesianToPolar(x_);
-  update_(z, z_pred);
+  VectorXd y = z - z_pred;
+  update_(tools.NormalizeRadians(y));
 }
 
-void KalmanFilter::update_(const VectorXd &z, const VectorXd &z_pred) {
-  VectorXd y = z - z_pred;
+void KalmanFilter::update_(const VectorXd &y) {
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();

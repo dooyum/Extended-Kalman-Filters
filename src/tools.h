@@ -40,6 +40,12 @@ public:
    * @param x polar coordinates
    */
   VectorXd PolarToCartesian(const VectorXd &x);
+  
+  /**
+   * Normalizes the phi value of polar coordinates to be between pi and -pi.
+   * @param x polar coordinates
+   */
+  VectorXd NormalizeRadians(const VectorXd &x);
 };
 
 #endif /* TOOLS_H_ */

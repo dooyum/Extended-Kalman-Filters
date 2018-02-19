@@ -67,9 +67,9 @@ public:
 private:
   /**
    * Updates the state by using standard Kalman Filter equations
-   * @param z The measurement at k+1
+   * @param y The difference between the measurement and prediction.
    */
-  void update_(const Eigen::VectorXd &z, const Eigen::VectorXd &z_pred);
+  void update_(const Eigen::VectorXd &y);
 };
 
 #endif /* KALMAN_FILTER_H_ */

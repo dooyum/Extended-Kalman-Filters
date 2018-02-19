@@ -111,20 +111,23 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   float elapsed_time = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
   previous_timestamp_ = measurement_pack.timestamp_;
   
-  float elapsed_time_2 = elapsed_time * elapsed_time;
-  float elapsed_time_3 = elapsed_time_2 * elapsed_time;
-  float elapsed_time_4 = elapsed_time_2 * elapsed_time_2;
-  
-  // Integrate time into F matrix.
-  ekf_.F_(0, 2) = elapsed_time;
-  ekf_.F_(1, 3) = elapsed_time;
-  
-  ekf_.Q_ << elapsed_time_4/4*noise_ax_, 0, elapsed_time_3/2*noise_ax_, 0,
-            0, elapsed_time_4/4*noise_ay_, 0, elapsed_time_3/2*noise_ay_,
-            elapsed_time_3/2*noise_ax_, 0, elapsed_time_2*noise_ax_, 0,
-            0, elapsed_time_3/2*noise_ay_, 0, elapsed_time_2*noise_ay_;
+  // Don't bother making prediction if elapsed time is too little.
+  if (elapsed_time > 0.001) {
+    float elapsed_time_2 = elapsed_time * elapsed_time;
+    float elapsed_time_3 = elapsed_time_2 * elapsed_time;
+    float elapsed_time_4 = elapsed_time_2 * elapsed_time_2;
+    
+    // Integrate time into F matrix.
+    ekf_.F_(0, 2) = elapsed_time;
+    ekf_.F_(1, 3) = elapsed_time;
+    
+    ekf_.Q_ << elapsed_time_4/4*noise_ax_, 0, elapsed_time_3/2*noise_ax_, 0,
+              0, elapsed_time_4/4*noise_ay_, 0, elapsed_time_3/2*noise_ay_,
+              elapsed_time_3/2*noise_ax_, 0, elapsed_time_2*noise_ax_, 0,
+              0, elapsed_time_3/2*noise_ay_, 0, elapsed_time_2*noise_ay_;
 
-  ekf_.Predict();
+    ekf_.Predict();
+  }
 
   /*****************************************************************************
    *  Update
